@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,7 +21,7 @@ import Model.AgendarModel;
 public class MainActivity extends AppCompatActivity {
 
     ListView listView;
-    Button btnAgendar;
+    Button btnAgenda;
     AgendarDAO agendarDAO;
     ArrayList<AgendarModel> contatos;
     ArrayAdapter adapter;
@@ -33,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         listView = (ListView)findViewById(R.id.Contatos);
-        btnAgendar = (Button)findViewById(R.id.btnAgendar);
-        btnAgendar.setOnClickListener(new View.OnClickListener() {
+        btnAgenda = (Button)findViewById(R.id.btnAgendar);
+        btnAgenda.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this,AgendarContatos.class);
@@ -45,12 +47,15 @@ public class MainActivity extends AppCompatActivity {
 
         // listar list view
 
+
+
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 contato = (AgendarModel) parent.getItemAtPosition(position);
                 Intent intent = new Intent(MainActivity.this, AgendarContatos.class);
-                intent.putExtra("selectContato",contato);
+                intent.putExtra("selectContatos",contato);
                 startActivity(intent);
 
             }
@@ -65,6 +70,23 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    public void  onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
+        MenuItem menuItem = menu.add("Deletar Contatos");
+        menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener(){
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                agendarDAO = new AgendarDAO(MainActivity.this);
+                agendarDAO.deletarcontato(contato);
+                agendarDAO.close();
+                carregarContatosAgenda();
+                return true;
+            }
+        });
+    }
+
+   
 
     @Override
     protected void onResume() {

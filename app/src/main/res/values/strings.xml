@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Agenda</string>
-    <string name="btnAgendar">Agendar</string>
+    <string name="btnAgendar">Acesso Agenda</string>
+
 </resources>

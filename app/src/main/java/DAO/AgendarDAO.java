@@ -14,7 +14,7 @@ public class AgendarDAO extends SQLiteOpenHelper {
 
 
     //variaveis constatis
-    private static final String DATABASE = "Agenda";//nome banco
+    private static final String DATABASE = "agenda";//nome banco minusculo.
     private static final int VERSION = 1;//versionamento banco
     public String msmErro = "";//erro retorn
 
@@ -26,17 +26,20 @@ public class AgendarDAO extends SQLiteOpenHelper {
     }
 
 
-   //criar tabela banco
+    //criar tabela banco
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String sql="CREATE TABLE agenda("+
-                "id   INTERGER PRIMARY KEY AUTOINCREMENT NOT NULL, "+
-                "nome TEXT NOT NULL, "+
-                "telefone INTERGER NOT NULL, "+
-                "email TEXT NOT NULL,"+
-                "endereco TEXT NOT NULL);";
-        db.execSQL(sql);
-
+        try {
+            String sql = "CREATE TABLE agenda(" +
+                    "id   INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "nome TEXT NOT NULL, " +
+                    "telefone INTEGER NOT NULL, " +
+                    "email TEXT NOT NULL," +
+                    "endereco TEXT NOT NULL);"; //Estava Interger.. Integer
+            db.execSQL(sql);
+        }catch (Exception ex){
+            String x = ex.getMessage();
+        }
     }
 
 
@@ -73,7 +76,6 @@ public class AgendarDAO extends SQLiteOpenHelper {
 
     }
 
-
     //update
     public boolean editarcontato(AgendarModel agenda){
 
@@ -107,7 +109,7 @@ public class AgendarDAO extends SQLiteOpenHelper {
             String[] contatos= {agenda.getId().toString()};
             getWritableDatabase().delete("agenda", "id=?",contatos);
 
-             return true;
+            return true;
         }
         catch(Exception ex){
             msmErro = ex.getMessage();
@@ -117,28 +119,26 @@ public class AgendarDAO extends SQLiteOpenHelper {
 
     }
 
-
-
     //select
     public ArrayList<AgendarModel>contatos(){
 
-     ArrayList<AgendarModel> contatos = new ArrayList<>();
+        ArrayList<AgendarModel> contatos = new ArrayList<>();
 
-     String[] Columns = {"id","nome","telefone","email","endereco"};
-     Cursor cursor = getWritableDatabase().query("agenda",Columns, null, null, null, null, null);
+        String[] Columns = {"id","nome","telefone","email","endereco"};
+        Cursor cursor = getWritableDatabase().query("agenda",Columns, null, null, null, null, null);
 
-     while(cursor.moveToNext()){
-         AgendarModel contato = new AgendarModel();
-         contato.setId( cursor.getLong(0));
-         contato.setNome( cursor.getString(1));
-         contato.setTelefone( cursor.getInt(2));
-         contato.setEmail( cursor.getString(3));
-         contato.setEndereco( cursor.getString(4));
+        while(cursor.moveToNext()){
+            AgendarModel contato = new AgendarModel();
+            contato.setId( cursor.getLong(0));
+            contato.setNome( cursor.getString(1));
+            contato.setTelefone( cursor.getInt(2));
+            contato.setEmail( cursor.getString(3));
+            contato.setEndereco( cursor.getString(4));
 
-         contatos.add(contato);
-     }
-     
-     return contatos;
+            contatos.add(contato);
+        }
+
+        return contatos;
 
     }
 
